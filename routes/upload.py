@@ -1,11 +1,9 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.utils import secure_filename
 import os
-from services.process import extract_text_from_pdf, extract_text_from_image
 
 upload_file = Blueprint('upload_file', __name__)
 
-# Configurações
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'jpg', 'jpeg'}
 
@@ -23,15 +21,7 @@ def upload():
         filename = secure_filename(file.filename)
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(file_path)
-
-        # Processar arquivo
-        if filename.lower().endswith('.pdf'):
-            text = extract_text_from_pdf(file_path)
-        else:
-            text = extract_text_from_image(file_path)
-
-        # Enviar texto para o ChatGPT e obter correção aqui
-
-        return jsonify({"message": "File uploaded and processed successfully", "extracted_text": text}), 200
+        # Processar arquivo aqui (e.g., extração de texto, chamada para ChatGPT)
+        return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
