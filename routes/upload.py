@@ -1,4 +1,16 @@
+from flask import Blueprint, request, jsonify
+from werkzeug.utils import secure_filename
+import os
 from services.process import extract_text_from_pdf, extract_text_from_image
+
+upload_file = Blueprint('upload_file', __name__)
+
+# Configurações
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'pdf', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @upload_file.route('/upload', methods=['POST'])
 def upload():
