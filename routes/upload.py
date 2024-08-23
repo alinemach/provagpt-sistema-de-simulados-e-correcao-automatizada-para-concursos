@@ -21,7 +21,23 @@ def upload():
         filename = secure_filename(file.filename)
         file_path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(file_path)
-        # Processar arquivo aqui (e.g., extração de texto, chamada para ChatGPT)
-        return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
+
+        # Processar arquivo
+        if filename.lower().endswith('.pdf'):
+            text = extract_text_from_pdf(file_path)
+        else:
+            text = extract_text_from_image(file_path)
+
+        # Instruções de correção (exemplo)
+        instructions = "Corrija a gramática e a ortografia do texto."
+
+        # Enviar texto para o ChatGPT e obter correção
+        corrected_text = correct_text_with_chatgpt(text, instructions)
+
+        # Log de depuração
+        print(f"Texto original: {text}")
+        print(f"Texto corrigido: {corrected_text}")
+
+        return jsonify({"message": "File uploaded and processed successfully", "original_text": text, "corrected_text": corrected_text}), 200
     else:
         return jsonify({"error": "File type not allowed"}), 400
