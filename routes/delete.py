@@ -6,7 +6,7 @@ delete_file = Blueprint('delete_file', __name__)
 UPLOAD_FOLDER = 'uploads'
 
 @delete_file.route('/delete', methods=['DELETE'])
-def delete_file():
+def delete_uploaded_file():
     filename = request.args.get('filename')
     if not filename:
         return jsonify({"error": "Filename parameter is missing"}), 400
